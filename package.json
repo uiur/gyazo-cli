@@ -14,6 +14,7 @@
   "dependencies": {
     "request": "^2.34.0",
     "tmp": "0.0.23",
-    "optimist": "^0.6.1"
+    "optimist": "^0.6.1",
+    "run-parallel": "^1.0.0"
   }
 }
