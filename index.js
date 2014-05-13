@@ -19,19 +19,21 @@ if (argv.help) {
   process.exit(0)
 }
 
-var input = argv._[0]
-
-if (input) {
-  var inputPath = input
-  fs.exists(path.join(process.cwd(), inputPath), function (exists) {
+function uploadFile(filePath, callback) {
+  fs.exists(filePath, function (exists) {
     if (!exists) {
-      console.error('File does not exist:', inputPath)
+      console.error('File does not exist:', filePath)
       process.exit(1)
     }
 
-    upload(inputPath, function () {
-      process.exit(0)
-    })
+    upload(filePath, callback)
+  })
+}
+
+var inputs = argv._
+if (inputs.length) {
+  inputs.forEach(function (input) {
+    uploadFile(path.resolve(process.cwd(), input))
   })
 } else {
   tmp.file(function (err, imagePath) {
