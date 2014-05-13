@@ -9,13 +9,15 @@ var exec = require('child_process').exec
   , parallel = require('run-parallel')
   , series = require('run-series')
   , optimist = require('optimist')
+  , url = require('url')
+  , request = require('request')
 
 var argv = optimist
     .usage('Usage: $0')
     .describe('help', 'Print this')
     .describe('times', 'Screenshot N times and upload them all')
     .alias('h', 'help')
-    .alias('T', 'times')
+    .alias('t', 'times')
     .argv
 
 if (argv.help) {
@@ -39,11 +41,33 @@ function pbcopy(text, callback) {
   exec(['echo', '"' + text + '"' , '| pbcopy'].join(' '), callback)
 }
 
+function isURL(str) {
+  return !!url.parse(str).host
+}
+
+function fetchURL(url, callback) {
+  tmp.file(function (err, tmpPath) {
+    var ws = fs.createWriteStream(tmpPath)
+    request(url).pipe(ws)
+    ws.on('finish', function () {
+      callback(tmpPath)
+    })
+  })
+}
+
 var inputs = argv._
 if (inputs.length) {
   parallel(
     inputs.map(function (input) {
       return function (callback) {
+        if (isURL(input)) {
+          fetchURL(input, function (imagePath) {
+            uploadFile(imagePath, callback)
+          })
+
+          return
+        }
+
         uploadFile(path.resolve(process.cwd(), input), callback)
       }
     })
