@@ -1,5 +1,5 @@
 # gyazo(1)
-Gyazo CLI in Node.js
+Gyazo for hackers.
 
 Available on Mac only for now.
 
@@ -8,6 +8,7 @@ Available on Mac only for now.
 ``` bash
 gyazo
 gyazo /path/to/your/image.png
+gyazo 1.png 2.png 3.png
 ```
 
 ### Installation
@@ -24,6 +25,12 @@ echo 'input.png' | gyazo
 gyazo http://hoge.com/a.png
 gyazo --host http://gyazo.yourhost.com/
 gyazo --id /your/idfile
+gyazo --times 3
+gyazo --quiet
+
+# gif
+gyazo video.mp4
+gyazo image.gif
 ```
 
 ### LICENSE
