@@ -16,10 +16,12 @@ var exec = require('child_process').exec
 var argv = optimist
     .usage('Usage: $0')
     .describe('help', 'Print this')
+    .describe('version', 'Show version')
     .describe('times', 'Screenshot N times and upload them all')
     .describe('quiet', 'Don\'t open an image in browser (Copy url only)')
     .describe('output', 'Write screenshot to an output file (also upload)')
     .alias('h', 'help')
+    .alias('v', 'version')
     .alias('t', 'times')
     .alias('q', 'quiet')
     .alias('o', 'output')
@@ -27,6 +29,11 @@ var argv = optimist
 
 if (argv.help) {
   console.log(optimist.help())
+  process.exit(0)
+}
+
+if (argv.version) {
+  console.log(require('./package.json').version)
   process.exit(0)
 }
 
