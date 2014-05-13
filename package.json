@@ -4,7 +4,9 @@
   "description": "Gyazo CLI",
   "main": "index.js",
   "scripts": {},
+  "bin": { "gyazo": "./index.js" },
   "author": "uiureo",
+  "os": ["darwin"],
   "dependencies": {
     "request": "^2.34.0",
     "tmp": "0.0.23",
