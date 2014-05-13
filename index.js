@@ -7,6 +7,8 @@ var exec = require('child_process').exec
   , resizeIfRetina = require('./lib/resize')
   , request = require('request')
 
+var argv = require('optimist').argv
+
 function upload(idFilePath, imagePath) {
   var requestStream =
     request.post('https://gyazo.com/upload.cgi', function (err, res, url) {
@@ -19,17 +21,30 @@ function upload(idFilePath, imagePath) {
   form.append('imagedata', fs.createReadStream(imagePath))
 }
 
-
 var idFilePath = path.join(process.env.HOME, 'Library/Gyazo/id')
 
-tmp.file(function (err, imagePath) {
-  if (err) throw err
+var input = argv._[0]
 
-  exec('screencapture -i ' + imagePath, function (err) {
+if (input) {
+  var inputPath = input
+  fs.exists(path.join(process.cwd(), inputPath), function (exists) {
+    if (!exists) {
+      console.error('File does not exist:', inputPath)
+      process.exit(1)
+    }
+
+    upload(idFilePath, inputPath)
+  })
+} else {
+  tmp.file(function (err, imagePath) {
     if (err) throw err
 
-    resizeIfRetina(imagePath, function () {
-      upload(idFilePath, imagePath)
+    exec('screencapture -i ' + imagePath, function (err) {
+      if (err) throw err
+
+      resizeIfRetina(imagePath, function () {
+        upload(idFilePath, imagePath)
+      })
     })
   })
-})
+}
