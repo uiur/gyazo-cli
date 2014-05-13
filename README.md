@@ -9,6 +9,7 @@ Available on Mac only for now.
 gyazo
 gyazo /path/to/your/image.png
 gyazo 1.png 2.png 3.png
+gyazo --times 3
 ```
 
 ### Installation
@@ -25,7 +26,6 @@ echo 'input.png' | gyazo
 gyazo http://hoge.com/a.png
 gyazo --host http://gyazo.yourhost.com/
 gyazo --id /your/idfile
-gyazo --times 3
 gyazo --quiet
 
 # gif
