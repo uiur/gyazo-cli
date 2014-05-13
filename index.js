@@ -5,7 +5,7 @@ var exec = require('child_process').exec
   , fs = require('fs')
   , tmp = require('tmp')
   , resizeIfRetina = require('./lib/resize')
-  , request = require('request')
+  , upload = require('./lib/upload')
   , optimist = require('optimist')
 
 var argv = optimist
@@ -19,20 +19,6 @@ if (argv.help) {
   process.exit(0)
 }
 
-function upload(idFilePath, imagePath) {
-  var requestStream =
-    request.post('https://gyazo.com/upload.cgi', function (err, res, url) {
-      exec(['echo', url , '| pbcopy'].join(' '))
-      exec('open ' + url)
-    })
-
-  var form = requestStream.form()
-  form.append('id', fs.readFileSync(idFilePath))
-  form.append('imagedata', fs.createReadStream(imagePath))
-}
-
-var idFilePath = path.join(process.env.HOME, 'Library/Gyazo/id')
-
 var input = argv._[0]
 
 if (input) {
@@ -43,7 +29,9 @@ if (input) {
       process.exit(1)
     }
 
-    upload(idFilePath, inputPath)
+    upload(inputPath, function () {
+      process.exit(0)
+    })
   })
 } else {
   tmp.file(function (err, imagePath) {
@@ -53,7 +41,9 @@ if (input) {
       if (err) throw err
 
       resizeIfRetina(imagePath, function () {
-        upload(idFilePath, imagePath)
+        upload(imagePath, function () {
+          process.exit(0)
+        })
       })
     })
   })
