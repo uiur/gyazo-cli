@@ -5,7 +5,8 @@ var exec = require('child_process').exec
   , fs = require('fs')
   , tmp = require('tmp')
   , resizeIfRetina = require('./lib/resize')
-  , upload = require('./lib/upload')
+  , upload = require('./lib/upload').upload
+  , uploadIfExists = require('./lib/upload').uploadIfExists
   , parallel = require('run-parallel')
   , series = require('run-series')
   , optimist = require('optimist')
@@ -27,17 +28,6 @@ var argv = optimist
 if (argv.help) {
   console.log(optimist.help())
   process.exit(0)
-}
-
-function uploadFile(filePath, callback) {
-  fs.exists(filePath, function (exists) {
-    if (!exists) {
-      console.error('File does not exist:', filePath)
-      process.exit(1)
-    }
-
-    upload(filePath, callback)
-  })
 }
 
 function pbcopy(text, callback) {
@@ -78,13 +68,13 @@ if (inputs.length) {
       return function (callback) {
         if (isURL(input)) {
           fetchURL(input, function (imagePath) {
-            uploadFile(imagePath, callback)
+            upload(imagePath, callback)
           })
 
           return
         }
 
-        uploadFile(path.resolve(process.cwd(), input), callback)
+        uploadIfExists(path.resolve(process.cwd(), input), callback)
       }
     })
   , function (err, urls) {
