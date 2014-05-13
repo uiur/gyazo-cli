@@ -4,7 +4,6 @@ var exec = require('child_process').exec
   , path = require('path')
   , fs = require('fs')
   , tmp = require('tmp')
-  , resizeIfRetina = require('./lib/resize')
   , upload = require('./lib/upload').upload
   , uploadIfExists = require('./lib/upload').uploadIfExists
   , parallel = require('run-parallel')
@@ -103,9 +102,7 @@ if (argv.times) {
 
     var uploadTasks = paths.map(function (path) {
       return function (callback) {
-        resizeIfRetina(path, function () {
-          upload(path, callback)
-        })
+        upload(path, callback)
       }
     })
 
@@ -127,11 +124,9 @@ if (argv.output) {
 }
 
 screencapture(imagePath, function (err, imagePath) {
-  resizeIfRetina(imagePath, function () {
-    upload(imagePath, function (err, url) {
-      pbcopy(url)
-      openURL(url)
-      process.exit(0)
-    })
+  upload(imagePath, function (err, url) {
+    pbcopy(url)
+    openURL(url)
+    process.exit(0)
   })
 })
