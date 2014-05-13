@@ -16,8 +16,10 @@ var argv = optimist
     .usage('Usage: $0')
     .describe('help', 'Print this')
     .describe('times', 'Screenshot N times and upload them all')
+    .describe('quiet', 'Don\'t open an image in browser (Copy url only)')
     .alias('h', 'help')
     .alias('t', 'times')
+    .alias('q', 'quiet')
     .argv
 
 if (argv.help) {
@@ -39,6 +41,18 @@ function uploadFile(filePath, callback) {
 function pbcopy(text, callback) {
   callback = callback || function () {}
   exec(['echo', '"' + text + '"' , '| pbcopy'].join(' '), callback)
+}
+
+function openURL(url) {
+  if (argv.quiet) return
+
+  exec('open ' + url)
+}
+
+function openURLs(urls) {
+  if (argv.quiet) return
+
+  exec('open ' + urls.join(' '))
 }
 
 function isURL(str) {
@@ -75,7 +89,7 @@ if (inputs.length) {
     if (err) throw err
 
     pbcopy(urls.join('\\n'))
-    exec('open ' + urls.join(' '))
+    openURLs(urls)
     process.exit(0)
   })
 
@@ -110,7 +124,7 @@ if (argv.times) {
       if (err) throw err
 
       pbcopy(urls.join('\\n'))
-      exec('open ' + urls.join(' '))
+      openURLs(urls)
       process.exit(0)
     })
   })
@@ -127,7 +141,7 @@ tmp.file(function (err, imagePath) {
     resizeIfRetina(imagePath, function () {
       upload(imagePath, function (err, url) {
         pbcopy(url)
-        exec('open ' + url)
+        openURL(url)
         process.exit(0)
       })
     })

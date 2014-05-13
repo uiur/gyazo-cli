@@ -31,6 +31,12 @@ gyazo --quiet
 # gif
 gyazo video.mp4
 gyazo image.gif
+
+# config
+# .gyazoconfig
+gyazo config host http://gyazo.yourcompany.com
+gyazo config id /your/idfile
+gyazo config quiet true
 ```
 
 ### LICENSE
