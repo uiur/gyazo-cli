@@ -12,6 +12,7 @@ var exec = require('child_process').exec
   , optimist = require('optimist')
   , url = require('url')
   , request = require('request')
+  , screencapture = require('./lib/screencapture')
 
 var argv = optimist
     .usage('Usage: $0')
@@ -93,11 +94,7 @@ if (argv.times) {
   var tasks = []
   for (var i = 0; i < times; i++) {
     tasks.push(function (callback) {
-      tmp.file(function (err, tmpPath) {
-        exec('screencapture -i ' + tmpPath, function () {
-          callback(null, tmpPath)
-        })
-      })
+      screencapture(callback)
     })
   }
 
@@ -124,22 +121,17 @@ if (argv.times) {
   return
 }
 
-tmp.file(function (err, imagePath) {
-  if (err) throw err
+var imagePath = null
+if (argv.output) {
+  imagePath = path.resolve(process.cwd(), argv.output)
+}
 
-  if (argv.output) {
-    imagePath = path.resolve(process.cwd(), argv.output)
-  }
-
-  exec('screencapture -i ' + imagePath, function (err) {
-    if (err) throw err
-
-    resizeIfRetina(imagePath, function () {
-      upload(imagePath, function (err, url) {
-        pbcopy(url)
-        openURL(url)
-        process.exit(0)
-      })
+screencapture(imagePath, function (err, imagePath) {
+  resizeIfRetina(imagePath, function () {
+    upload(imagePath, function (err, url) {
+      pbcopy(url)
+      openURL(url)
+      process.exit(0)
     })
   })
 })
