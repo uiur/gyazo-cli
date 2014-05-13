@@ -30,6 +30,11 @@ if (argv.help) {
   process.exit(0)
 }
 
+var stdinReadable
+process.stdin.on('readable', function () {
+  stdinReadable = true
+})
+
 function pbcopy(text, callback) {
   callback = callback || function () {}
   exec(['echo', '"' + text + '"' , '| pbcopy'].join(' '), callback)
@@ -61,6 +66,7 @@ function fetchURL(url, callback) {
   })
 }
 
+// upload from url or path
 var inputs = argv._
 if (inputs.length) {
   parallel(
@@ -88,6 +94,7 @@ if (inputs.length) {
   return
 }
 
+// screencapture N times and upload
 if (argv.times) {
   var times = argv.times
   var tasks = []
@@ -117,6 +124,21 @@ if (argv.times) {
 
   return
 }
+
+// upload from stdin
+tmp.file(function (err, tmpPath) {
+  var ws = fs.createWriteStream(tmpPath)
+  process.stdin.pipe(ws)
+  process.stdin.on('end', function () {
+    upload(tmpPath, function (err, url) {
+      pbcopy(url)
+      openURL(url)
+      process.exit(0)
+    })
+  })
+})
+
+if (!stdinReadable) return
 
 var imagePath = null
 if (argv.output) {

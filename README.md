@@ -16,6 +16,8 @@ gyazo http://google.com/doodle.png
 gyazo --times 3
 gyazo --quiet
 gyazo -o output.png
+cat input.png | gyazo
+sed "s/1/2/g" original.jpg | gyazo # upload glitched image
 ```
 
 ### Installation
@@ -26,9 +28,6 @@ npm install -g gyazo-cli
 ### TODO
 
 ``` bash
-cat input.png | gyazo
-sed "s/1/2/g" original.jpg | gyazo
-
 gyazo --host http://gyazo.yourhost.com/
 gyazo --id /your/idfile
 
