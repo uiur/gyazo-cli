@@ -6,6 +6,7 @@
   "scripts": {},
   "author": "uiureo",
   "dependencies": {
-    "request": "^2.34.0"
+    "request": "^2.34.0",
+    "tmp": "0.0.23"
   }
 }
