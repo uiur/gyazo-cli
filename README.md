@@ -9,8 +9,10 @@ Available on Mac only for now.
 gyazo
 gyazo /path/to/your/image.png
 gyazo 1.png 2.png 3.png
-gyazo --times 3
+gyazo image.gif
 gyazo http://google.com/doodle.png
+gyazo --times 3
+gyazo --quiet
 ```
 
 ### Installation
@@ -26,11 +28,9 @@ gyazo > output.png
 echo 'input.png' | gyazo
 gyazo --host http://gyazo.yourhost.com/
 gyazo --id /your/idfile
-gyazo --quiet
 
 # gif
 gyazo video.mp4
-gyazo image.gif
 
 # config
 # .gyazoconfig
