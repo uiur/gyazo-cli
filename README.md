@@ -18,7 +18,6 @@ gyazo --quiet
 ```
 
 ### Installation
-not yet
 ``` bash
 npm install -g gyazo-cli
 ```
