@@ -1,7 +1,7 @@
 {
   "name": "gyazo-cli",
-  "version": "0.0.0",
-  "description": "Gyazo CLI",
+  "version": "0.0.1",
+  "description": "Gyazo for hackers",
   "main": "index.js",
   "scripts": {},
   "bin": {
