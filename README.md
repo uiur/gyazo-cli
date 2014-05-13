@@ -1,6 +1,8 @@
 # gyazo(1)
 Gyazo for hackers.
 
+![ninja cat](http://i.gyazo.com/4127de4be736f098edf9492f6cdf4925.gif)
+
 Available on Mac only for now.
 
 ### Usage
