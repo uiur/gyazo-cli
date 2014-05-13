@@ -15,6 +15,7 @@ gyazo image.gif
 gyazo http://google.com/doodle.png
 gyazo --times 3
 gyazo --quiet
+gyazo -o output.png
 ```
 
 ### Installation
@@ -25,8 +26,9 @@ npm install -g gyazo-cli
 ### TODO
 
 ``` bash
-gyazo > output.png
-echo 'input.png' | gyazo
+cat input.png | gyazo
+sed "s/1/2/g" original.jpg | gyazo
+
 gyazo --host http://gyazo.yourhost.com/
 gyazo --id /your/idfile
 
@@ -38,6 +40,9 @@ gyazo video.mp4
 gyazo config host http://gyazo.yourcompany.com
 gyazo config id /your/idfile
 gyazo config quiet true
+
+# idea
+gyazo --direct
 ```
 
 ### LICENSE

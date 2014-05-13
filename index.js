@@ -17,9 +17,11 @@ var argv = optimist
     .describe('help', 'Print this')
     .describe('times', 'Screenshot N times and upload them all')
     .describe('quiet', 'Don\'t open an image in browser (Copy url only)')
+    .describe('output', 'Write screenshot to an output file (also upload)')
     .alias('h', 'help')
     .alias('t', 'times')
     .alias('q', 'quiet')
+    .alias('o', 'output')
     .argv
 
 if (argv.help) {
@@ -134,6 +136,10 @@ if (argv.times) {
 
 tmp.file(function (err, imagePath) {
   if (err) throw err
+
+  if (argv.output) {
+    imagePath = path.resolve(process.cwd(), argv.output)
+  }
 
   exec('screencapture -i ' + imagePath, function (err) {
     if (err) throw err
