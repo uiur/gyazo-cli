@@ -6,8 +6,18 @@ var exec = require('child_process').exec
   , tmp = require('tmp')
   , resizeIfRetina = require('./lib/resize')
   , request = require('request')
+  , optimist = require('optimist')
 
-var argv = require('optimist').argv
+var argv = optimist
+    .usage('Usage: $0')
+    .describe('help', 'Print this')
+    .alias('h', 'help')
+    .argv
+
+if (argv.help) {
+  console.log(optimist.help())
+  process.exit(0)
+}
 
 function upload(idFilePath, imagePath) {
   var requestStream =
