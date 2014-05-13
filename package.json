@@ -1,0 +1,11 @@
+{
+  "name": "gyazo-cli",
+  "version": "0.0.0",
+  "description": "Gyazo CLI",
+  "main": "index.js",
+  "scripts": {},
+  "author": "uiureo",
+  "dependencies": {
+    "request": "^2.34.0"
+  }
+}
