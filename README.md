@@ -26,6 +26,8 @@ npm install -g gyazo-cli
 ```
 
 ### TODO
+* Set UserAgent
+* Linux support
 
 ``` bash
 gyazo --host http://gyazo.yourhost.com/
@@ -42,6 +44,7 @@ gyazo config quiet true
 
 # idea
 gyazo --direct
+gyazo config autosave.dir /path/to/your/dir/
 ```
 
 ### LICENSE
