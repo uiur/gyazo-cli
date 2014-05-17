@@ -1,6 +1,7 @@
 var test = require('tape')
 
 var request = require('request')
+  , fs = require('fs')
   , upload = require('../lib/upload').upload
 
 var RES_URL = 'http://gyazo.com/4127de4be736f098edf9492f6cdf4925'
@@ -28,6 +29,11 @@ request.post = function (url, callback) {
   }
 }
 
+// stub id
+fs.readFileSync = function () {
+  return 'gyazo id'
+}
+
 test('upload', function (t) {
   t.plan(4)
 
@@ -38,7 +44,7 @@ test('upload', function (t) {
   t.equal(requestURL, 'http://upload.gyazo.com/upload.cgi')
 
   t.ok(form.imagedata)
-  t.ok(form.id)
+  t.equal(form.id, 'gyazo id')
 })
 
 test('upload with host option', function (t) {
@@ -56,4 +62,20 @@ test('upload with host option', function (t) {
   upload(__dirname + '/cat.gif')
 
   t.equal(requestURL, 'http://syazo.com/upload.cgi')
+})
+
+test('upload with id option', function (t) {
+  process.env.GYAZO_ID = '/path/to/idfile'
+
+  var readPath
+  fs.readFileSync = function (filePath) {
+    readPath = filePath
+    return 'gyazo id'
+  }
+
+  upload(__dirname + '/cat.gif')
+
+  t.equal(readPath, '/path/to/idfile')
+
+  t.end()
 })
