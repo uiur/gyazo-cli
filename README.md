@@ -13,11 +13,16 @@ gyazo /path/to/your/image.png
 gyazo 1.png 2.png 3.png
 gyazo image.gif
 gyazo http://google.com/doodle.png
+
 gyazo --times 3
 gyazo --quiet
 gyazo -o output.png
+
 cat input.png | gyazo
 sed "s/1/2/g" original.jpg | gyazo # upload glitched image
+
+gyazo --host http://gyazo.yourhost.com/
+gyazo --id /your/idfile
 ```
 
 ### Installation
@@ -30,8 +35,6 @@ npm install -g gyazo-cli
 * Linux support
 
 ``` bash
-gyazo --host http://gyazo.yourhost.com/
-gyazo --id /your/idfile
 
 # gif
 gyazo video.mp4
