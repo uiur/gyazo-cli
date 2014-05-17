@@ -20,6 +20,7 @@ var argv = optimist
     .describe('times', 'Screenshot N times and upload them all')
     .describe('quiet', 'Don\'t open an image in browser (Copy url only)')
     .describe('output', 'Write screenshot to an output file (also upload)')
+    .describe('host', 'Specify a host url to which you upload')
     .alias('h', 'help')
     .alias('v', 'version')
     .alias('t', 'times')
@@ -35,6 +36,10 @@ if (argv.help) {
 if (argv.version) {
   console.log(require('./package.json').version)
   process.exit(0)
+}
+
+if (argv.host) {
+  process.env.GYAZO_HOST = argv.host
 }
 
 var stdinReadable
