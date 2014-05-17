@@ -21,6 +21,7 @@ var argv = optimist
     .describe('quiet', 'Don\'t open an image in browser (Copy url only)')
     .describe('output', 'Write screenshot to an output file (also upload)')
     .describe('host', 'Specify a host url to which you upload')
+    .describe('id', 'Specify a device id')
     .alias('h', 'help')
     .alias('v', 'version')
     .alias('t', 'times')
@@ -40,6 +41,10 @@ if (argv.version) {
 
 if (argv.host) {
   process.env.GYAZO_HOST = argv.host
+}
+
+if (argv.id) {
+  process.env.GYAZO_ID = argv.id
 }
 
 var stdinReadable
