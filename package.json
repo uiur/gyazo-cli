@@ -3,7 +3,9 @@
   "version": "0.0.2",
   "description": "Gyazo for hackers",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "node ./test/*.js"
+  },
   "bin": {
     "gyazo": "./index.js"
   },
