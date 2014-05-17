@@ -1,9 +1,13 @@
 # gyazo(1)
 Gyazo for hackers.
 
+
 ![ninja cat](http://i.gyazo.com/4127de4be736f098edf9492f6cdf4925.gif)
 
 Available on Mac only for now.
+
+[![Build Status](https://travis-ci.org/uiureo/gyazo-cli.svg?branch=master)](https://travis-ci.org/uiureo/gyazo-cli)
+[![](http://img.shields.io/npm/v/gyazo-cli.svg)](https://npmjs.org/package/gyazo-cli)
 
 ### Usage
 
