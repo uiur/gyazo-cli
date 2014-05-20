@@ -6,6 +6,7 @@ var exec = require('child_process').exec
   , tmp = require('tmp')
   , fs = require('fs')
   , Promise = require('es6-promise').Promise
+  , clip = require('cliparoo')
   , gyazo = require('../lib/gyazo')
 
 var argv = optimist
@@ -34,11 +35,6 @@ if (argv.version) {
   process.exit(0)
 }
 
-function pbcopy(text, callback) {
-  callback = callback || function () {}
-  exec(['echo', '"' + text + '"' , '| pbcopy'].join(' '), callback)
-}
-
 function openURLs(urls) {
   if (argv.quiet) return
 
@@ -52,10 +48,11 @@ function gyazoAndFinalize(inputs) {
   }
 
   return gyazo(inputs, options).then(function (urls) {
-    pbcopy(urls.join('\\n'))
-    openURLs(urls)
+    clip(urls.join('\\\\n'), function () {
+      openURLs(urls)
 
-    process.exit(0)
+      process.exit(0)
+    })
   })
 }
 

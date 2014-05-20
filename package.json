@@ -19,7 +19,8 @@
     "optimist": "^0.6.1",
     "run-parallel": "^1.0.0",
     "run-series": "^1.0.2",
-    "es6-promise": "^1.0.0"
+    "es6-promise": "^1.0.0",
+    "cliparoo": "^1.0.0"
   },
   "devDependencies": {
     "tape": "^2.13.0"
