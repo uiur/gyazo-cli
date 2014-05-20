@@ -5,7 +5,7 @@ var exec = require('child_process').exec
   , screencapture = require('../lib/screencapture')
   , tmp = require('tmp')
   , fs = require('fs')
-  , series = require('run-series')
+  , Promise = require('es6-promise').Promise
   , gyazo = require('../lib/gyazo')
 
 var argv = optimist
@@ -52,7 +52,12 @@ function openURLs(urls) {
 }
 
 function gyazoAndFinalize(inputs) {
-  return gyazo(inputs).then(function (urls) {
+  var options = {
+    host: argv.host,
+    id: argv.id
+  }
+
+  return gyazo(inputs, options).then(function (urls) {
     pbcopy(urls.join('\\n'))
     openURLs(urls)
 
@@ -75,26 +80,27 @@ if (inputs.length) {
   return gyazoAndFinalize(inputs)
 }
 
+
 // screencapture N times and upload
-if (argv.times) {
-  var times = argv.times
-  var tasks = []
+var times = argv.times || 1
+
+var capturePromise = new Promise(function (resolve, reject) {
+  var promise = Promise.resolve()
+  var paths = []
+
   for (var i = 0; i < times; i++) {
-    tasks.push(function (callback) {
-      screencapture(callback)
-    })
+    promise = promise
+      .then(screencapture)
+      .then(function (imagePath) {
+        paths.push(imagePath)
+      })
   }
 
-  series(tasks, function (err, paths) {
-    if (err) throw err
+  promise.then(function () {
+    resolve(paths)
+  }, reject)
+})
 
-    gyazoAndFinalize(paths)
-  })
-
-  return
-}
-
-// capture and upload
-screencapture(function (err, imagePath) {
-  return gyazoAndFinalize(imagePath)
+capturePromise.then(function (paths) {
+  return gyazoAndFinalize(paths)
 })
