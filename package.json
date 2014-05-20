@@ -2,7 +2,7 @@
   "name": "gyazo-cli",
   "version": "0.0.2",
   "description": "Gyazo for hackers",
-  "main": "index.js",
+  "main": "./lib/gyazo.js",
   "scripts": {
     "test": "node ./test/*.js"
   },
