@@ -1,15 +1,31 @@
 var test = require('tape')
 
-var request = require('request')
-  , fs = require('fs')
-  , upload = require('../lib/upload').upload
+var fs = require('fs')
+  , gyazo = require('../lib/gyazo')
+  , server = require('./support/server')
 
-var RES_URL = 'http://gyazo.com/4127de4be736f098edf9492f6cdf4925'
+var options = { host: 'http://localhost:8888', id: './test/support/id' }
 
-var requestURL = null
-  , form = {}
+test('upload with file path', function (t) {
+  t.plan(3)
+
+  server.once('upload', function (result) {
+    t.equal(result.id, fs.readFileSync('./test/support/id', 'utf8'))
+    t.ok(result.imagedata)
+  })
+
+  gyazo(__dirname + '/cat.gif', options).then(function (urls) {
+    t.equal(urls[0], 'url')
+  })
+})
+
+// XXX:
+setTimeout(function () {
+  server.close()
+}, 1000)
 
 // stub request
+/*
 request.post = function (url, callback) {
   requestURL = url
 
@@ -79,3 +95,5 @@ test('upload with id option', function (t) {
 
   t.end()
 })
+
+*/
