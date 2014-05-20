@@ -1,5 +1,6 @@
 var multiparty = require('multiparty')
   , http = require('http')
+  , fs = require('fs')
 
 var server = module.exports = http.createServer(function(req, res) {
   if (req.url === '/upload.cgi' && req.method === 'POST') {
@@ -10,5 +11,8 @@ var server = module.exports = http.createServer(function(req, res) {
       res.writeHead(200, {'content-type': 'text/plain'})
       res.end('url')
     })
+  } else {
+    fs.createReadStream(__dirname + '/nyancat.png').pipe(res)
   }
+
 }).listen(8888)
