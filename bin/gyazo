@@ -14,14 +14,14 @@ var argv = optimist
     .describe('version', 'Show version')
     .describe('times', 'Screenshot N times and upload them all')
     .describe('quiet', 'Don\'t open an image in browser (Copy url only)')
-    .describe('output', 'Write screenshot to an output file (also upload)')
+    .describe('stdin', 'Read image from stdin')
     .describe('host', 'Specify a host url to which you upload')
     .describe('id', 'Specify a device id')
     .alias('h', 'help')
     .alias('v', 'version')
     .alias('t', 'times')
     .alias('q', 'quiet')
-    .alias('o', 'output')
+    .alias('i', 'stdin')
     .argv
 
 if (argv.help) {
@@ -37,12 +37,6 @@ if (argv.version) {
 function pbcopy(text, callback) {
   callback = callback || function () {}
   exec(['echo', '"' + text + '"' , '| pbcopy'].join(' '), callback)
-}
-
-function openURL(url) {
-  if (argv.quiet) return
-
-  exec('open ' + url)
 }
 
 function openURLs(urls) {
@@ -65,14 +59,18 @@ function gyazoAndFinalize(inputs) {
   })
 }
 
-// XXX:
-tmp.file(function (err, tmpPath) {
-  var ws = fs.createWriteStream(tmpPath)
-  process.stdin.pipe(ws)
-  process.stdin.on('end', function () {
-    gyazoAndFinalize(tmpPath)
+if (argv.stdin) {
+  // XXX:
+  tmp.file(function (err, tmpPath) {
+    var ws = fs.createWriteStream(tmpPath)
+    process.stdin.pipe(ws)
+    process.stdin.on('end', function () {
+      gyazoAndFinalize(tmpPath)
+    })
   })
-})
+
+  return
+}
 
 // upload from url or path
 var inputs = argv._
@@ -80,27 +78,28 @@ if (inputs.length) {
   return gyazoAndFinalize(inputs)
 }
 
-
 // screencapture N times and upload
 var times = argv.times || 1
 
-var capturePromise = new Promise(function (resolve, reject) {
-  var promise = Promise.resolve()
-  var paths = []
+function sequenceScreencapture(times) {
+  return new Promise(function (resolve, reject) {
+    var promise = Promise.resolve()
+    var paths = []
 
-  for (var i = 0; i < times; i++) {
-    promise = promise
-      .then(screencapture)
-      .then(function (imagePath) {
-        paths.push(imagePath)
-      })
-  }
+    for (var i = 0; i < times; i++) {
+      promise = promise
+        .then(screencapture)
+        .then(function (imagePath) {
+          paths.push(imagePath)
+        })
+    }
 
-  promise.then(function () {
-    resolve(paths)
-  }, reject)
-})
+    promise.then(function () {
+      resolve(paths)
+    }, reject)
+  })
+}
 
-capturePromise.then(function (paths) {
+sequenceScreencapture(times).then(function (paths) {
   return gyazoAndFinalize(paths)
 })

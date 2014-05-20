@@ -20,10 +20,9 @@ gyazo http://google.com/doodle.png
 
 gyazo --times 3
 gyazo --quiet
-gyazo -o output.png
 
-cat input.png | gyazo
-sed "s/1/2/g" original.jpg | gyazo # upload glitched image
+cat input.png | gyazo -i
+sed "s/1/2/g" original.jpg | gyazo -i # upload glitched image
 
 gyazo --host http://gyazo.yourhost.com/
 gyazo --id /your/idfile
