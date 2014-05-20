@@ -1,17 +1,12 @@
 #!/usr/bin/env node
 
 var exec = require('child_process').exec
-  , path = require('path')
-  , fs = require('fs')
-  , tmp = require('tmp')
-  , upload = require('../lib/upload').upload
-  , uploadIfExists = require('../lib/upload').uploadIfExists
-  , parallel = require('run-parallel')
-  , series = require('run-series')
   , optimist = require('optimist')
-  , url = require('url')
-  , request = require('request')
   , screencapture = require('../lib/screencapture')
+  , tmp = require('tmp')
+  , fs = require('fs')
+  , series = require('run-series')
+  , gyazo = require('../lib/gyazo')
 
 var argv = optimist
     .usage('Usage: $0')
@@ -39,19 +34,6 @@ if (argv.version) {
   process.exit(0)
 }
 
-if (argv.host) {
-  process.env.GYAZO_HOST = argv.host
-}
-
-if (argv.id) {
-  process.env.GYAZO_ID = argv.id
-}
-
-var stdinReadable
-process.stdin.on('readable', function () {
-  stdinReadable = true
-})
-
 function pbcopy(text, callback) {
   callback = callback || function () {}
   exec(['echo', '"' + text + '"' , '| pbcopy'].join(' '), callback)
@@ -69,46 +51,28 @@ function openURLs(urls) {
   exec('open ' + urls.join(' '))
 }
 
-function isURL(str) {
-  return !!url.parse(str).host
-}
+function gyazoAndFinalize(inputs) {
+  return gyazo(inputs).then(function (urls) {
+    pbcopy(urls.join('\\n'))
+    openURLs(urls)
 
-function fetchURL(url, callback) {
-  tmp.file(function (err, tmpPath) {
-    var ws = fs.createWriteStream(tmpPath)
-    request(url).pipe(ws)
-    ws.on('finish', function () {
-      callback(tmpPath)
-    })
+    process.exit(0)
   })
 }
+
+// XXX:
+tmp.file(function (err, tmpPath) {
+  var ws = fs.createWriteStream(tmpPath)
+  process.stdin.pipe(ws)
+  process.stdin.on('end', function () {
+    gyazoAndFinalize(tmpPath)
+  })
+})
 
 // upload from url or path
 var inputs = argv._
 if (inputs.length) {
-  parallel(
-    inputs.map(function (input) {
-      return function (callback) {
-        if (isURL(input)) {
-          fetchURL(input, function (imagePath) {
-            upload(imagePath, callback)
-          })
-
-          return
-        }
-
-        uploadIfExists(path.resolve(process.cwd(), input), callback)
-      }
-    })
-  , function (err, urls) {
-    if (err) throw err
-
-    pbcopy(urls.join('\\n'))
-    openURLs(urls)
-    process.exit(0)
-  })
-
-  return
+  return gyazoAndFinalize(inputs)
 }
 
 // screencapture N times and upload
@@ -124,48 +88,13 @@ if (argv.times) {
   series(tasks, function (err, paths) {
     if (err) throw err
 
-    var uploadTasks = paths.map(function (path) {
-      return function (callback) {
-        upload(path, callback)
-      }
-    })
-
-    parallel(uploadTasks, function (err, urls) {
-      if (err) throw err
-
-      pbcopy(urls.join('\\n'))
-      openURLs(urls)
-      process.exit(0)
-    })
+    gyazoAndFinalize(paths)
   })
 
   return
 }
 
-// upload from stdin
-tmp.file(function (err, tmpPath) {
-  var ws = fs.createWriteStream(tmpPath)
-  process.stdin.pipe(ws)
-  process.stdin.on('end', function () {
-    upload(tmpPath, function (err, url) {
-      pbcopy(url)
-      openURL(url)
-      process.exit(0)
-    })
-  })
-})
-
-if (!stdinReadable) return
-
-var imagePath = null
-if (argv.output) {
-  imagePath = path.resolve(process.cwd(), argv.output)
-}
-
-screencapture(imagePath, function (err, imagePath) {
-  upload(imagePath, function (err, url) {
-    pbcopy(url)
-    openURL(url)
-    process.exit(0)
-  })
+// capture and upload
+screencapture(function (err, imagePath) {
+  return gyazoAndFinalize(imagePath)
 })
