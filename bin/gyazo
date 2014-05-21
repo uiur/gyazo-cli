@@ -38,7 +38,7 @@ if (argv.version) {
 }
 
 if (argv._[0] === 'config') {
-  if (!argv._[1]) process.exit(0)
+  if (!argv._[1]) return config.read().then(console.log)
 
   var key = argv._[1]
     , value = argv._[2]
