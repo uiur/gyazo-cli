@@ -18,12 +18,13 @@
     "darwin"
   ],
   "dependencies": {
-    "request": "^2.34.0",
-    "tmp": "0.0.23",
-    "optimist": "^0.6.1",
-    "es6-promise": "^1.0.0",
     "cliparoo": "^1.0.0",
-    "extend": "^1.2.1"
+    "es6-promise": "^1.0.0",
+    "extend": "^1.2.1",
+    "optimist": "^0.6.1",
+    "request": "^2.34.0",
+    "screencapture": "0.0.1",
+    "tmp": "0.0.23"
   },
   "devDependencies": {
     "tape": "^2.13.0",
