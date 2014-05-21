@@ -3,6 +3,10 @@
   "version": "0.0.2",
   "description": "Gyazo for hackers",
   "main": "./lib/gyazo.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uiureo/gyazo-cli.git"
+  },
   "scripts": {
     "test": "node ./test/*.js"
   },
@@ -17,8 +21,6 @@
     "request": "^2.34.0",
     "tmp": "0.0.23",
     "optimist": "^0.6.1",
-    "run-parallel": "^1.0.0",
-    "run-series": "^1.0.2",
     "es6-promise": "^1.0.0",
     "cliparoo": "^1.0.0",
     "extend": "^1.2.1"
