@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-var exec = require('child_process').exec
-  , optimist = require('optimist')
+var optimist = require('optimist')
   , screencapture = require('../lib/screencapture')
   , tmp = require('tmp')
   , fs = require('fs')
@@ -10,6 +9,7 @@ var exec = require('child_process').exec
   , gyazo = require('../lib/gyazo')
   , config = require('../lib/config')
   , extend = require('extend')
+  , open = require('open')
 
 var argv = optimist
     .usage('Usage: $0')
@@ -55,7 +55,9 @@ if (argv._[0] === 'config') {
 function openURLs(urls) {
   if (argv.quiet) return
 
-  exec('open ' + urls.join(' '))
+  urls.forEach(function (url) {
+    open(url)
+  })
 }
 
 function readOptions() {

@@ -21,6 +21,7 @@
     "cliparoo": "^1.0.0",
     "es6-promise": "^1.0.0",
     "extend": "^1.2.1",
+    "open": "0.0.5",
     "optimist": "^0.6.1",
     "request": "^2.34.0",
     "screencapture": "0.0.1",
