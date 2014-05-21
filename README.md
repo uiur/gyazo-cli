@@ -25,6 +25,15 @@ sed "s/1/2/g" original.jpg | gyazo -i # upload glitched image
 
 gyazo --host http://gyazo.yourhost.com/
 gyazo --id /your/idfile
+
+## config
+# ~/.gyazo.json or /your/working/dir/.gyazo.json
+gyazo config host http://gyazo.yourcompany.com
+gyazo config id /your/idfile
+
+# Show config
+gyazo config
+gyazo config host
 ```
 
 ### Installation
@@ -37,15 +46,8 @@ npm install -g gyazo-cli
 * Linux support
 
 ``` bash
-
 # gif
 gyazo video.mp4
-
-# config
-# .gyazo.json
-gyazo config host http://gyazo.yourcompany.com
-gyazo config id /your/idfile
-gyazo config quiet true
 
 # idea
 gyazo --direct
