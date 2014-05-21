@@ -8,6 +8,8 @@ var exec = require('child_process').exec
   , Promise = require('es6-promise').Promise
   , clip = require('cliparoo')
   , gyazo = require('../lib/gyazo')
+  , config = require('../lib/config')
+  , extend = require('extend')
 
 var argv = optimist
     .usage('Usage: $0')
@@ -35,23 +37,47 @@ if (argv.version) {
   process.exit(0)
 }
 
+if (argv._[0] === 'config') {
+  if (!argv._[1]) process.exit(0)
+
+  var key = argv._[1]
+    , value = argv._[2]
+
+  if (value) {
+    config.add(key, value)
+  } else {
+    config.readValue(key).then(console.log)
+  }
+
+  return
+}
+
 function openURLs(urls) {
   if (argv.quiet) return
 
   exec('open ' + urls.join(' '))
 }
 
+function readOptions() {
+  return config.read().then(function (options) {
+    var argvOptions = ['host', 'id'].reduce(function (options, key) {
+      if (argv[key]) options[key] = argv[key]
+    }, {})
+
+    extend(options, argvOptions)
+
+    return options
+  })
+}
+
 function gyazoAndFinalize(inputs) {
-  var options = {
-    host: argv.host,
-    id: argv.id
-  }
+  return readOptions().then(function (options) {
+    gyazo(inputs, options).then(function (urls) {
+      clip(urls.join('\\\\n'), function () {
+        openURLs(urls)
 
-  return gyazo(inputs, options).then(function (urls) {
-    clip(urls.join('\\\\n'), function () {
-      openURLs(urls)
-
-      process.exit(0)
+        process.exit(0)
+      })
     })
   })
 }

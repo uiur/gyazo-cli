@@ -42,7 +42,7 @@ npm install -g gyazo-cli
 gyazo video.mp4
 
 # config
-# .gyazoconfig
+# .gyazo.json
 gyazo config host http://gyazo.yourcompany.com
 gyazo config id /your/idfile
 gyazo config quiet true
