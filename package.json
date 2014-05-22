@@ -15,7 +15,8 @@
   },
   "author": "uiureo",
   "os": [
-    "darwin"
+    "darwin",
+    "linux"
   ],
   "dependencies": {
     "cliparoo": "^1.0.0",
