@@ -23,6 +23,7 @@
     "extend": "^1.2.1",
     "open": "0.0.5",
     "optimist": "^0.6.1",
+    "osenv": "0.0.3",
     "request": "^2.34.0",
     "screencapture": "0.0.1",
     "tmp": "0.0.23"
