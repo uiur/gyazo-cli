@@ -6,7 +6,7 @@ Gyazo for hackers.
 
 ![ninja cat](http://i.gyazo.com/4127de4be736f098edf9492f6cdf4925.gif)
 
-Available on Mac only for now.
+Available on OSX and Linux.
 
 ### Usage
 
@@ -41,9 +41,10 @@ gyazo config host
 npm install -g gyazo-cli
 ```
 
+In Linux, you need to install imagemagick.
+
 ### TODO
 * Set UserAgent
-* Linux support
 
 ``` bash
 # gif
