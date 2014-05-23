@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 
 var optimist = require('optimist')
-  , screencapture = require('../lib/screencapture')
+  , gyazo = require('../lib/gyazo')
   , tmp = require('tmp')
   , fs = require('fs')
-  , Promise = require('es6-promise').Promise
-  , clip = require('cliparoo')
-  , upload = require('gyazo-upload')
   , config = require('../lib/config')
   , extend = require('extend')
   , open = require('open')
@@ -52,14 +49,6 @@ if (argv._[0] === 'config') {
   return
 }
 
-function openURLs(urls) {
-  if (argv.quiet) return
-
-  urls.forEach(function (url) {
-    open(url)
-  })
-}
-
 function readOptions() {
   return config.read().then(function (options) {
     var argvOptions = ['host', 'id'].reduce(function (options, key) {
@@ -70,63 +59,29 @@ function readOptions() {
     extend(options, argvOptions)
 
     return options
-    console.log(options)
   })
 }
 
-function gyazoAndFinalize(inputs) {
-  return readOptions().then(function (options) {
-    upload(inputs, options).then(function (urls) {
-      clip(urls.join('\\\\n'), function () {
-        openURLs(urls)
-
-        process.exit(0)
+readOptions().then(function (options) {
+  if (argv.stdin) {
+    // XXX:
+    tmp.file(function (err, tmpPath) {
+      var ws = fs.createWriteStream(tmpPath)
+      process.stdin.pipe(ws)
+      process.stdin.on('end', function () {
+        gyazo(tmpPath, options).then(process.exit)
       })
     })
-  })
-}
 
-if (argv.stdin) {
-  // XXX:
-  tmp.file(function (err, tmpPath) {
-    var ws = fs.createWriteStream(tmpPath)
-    process.stdin.pipe(ws)
-    process.stdin.on('end', function () {
-      gyazoAndFinalize(tmpPath)
-    })
-  })
+    return
+  }
 
-  return
-}
+  // upload from url or path
+  var inputs = argv._
+  if (inputs.length) {
+    return gyazo(inputs, options).then(process.exit).catch(console.error)
+  }
 
-// upload from url or path
-var inputs = argv._
-if (inputs.length) {
-  return gyazoAndFinalize(inputs)
-}
-
-// screencapture N times and upload
-var times = argv.times || 1
-
-function sequenceScreencapture(times) {
-  return new Promise(function (resolve, reject) {
-    var promise = Promise.resolve()
-    var paths = []
-
-    for (var i = 0; i < times; i++) {
-      promise = promise
-        .then(screencapture)
-        .then(function (imagePath) {
-          paths.push(imagePath)
-        })
-    }
-
-    promise.then(function () {
-      resolve(paths)
-    }, reject)
-  })
-}
-
-sequenceScreencapture(times).then(function (paths) {
-  return gyazoAndFinalize(paths)
+  options.times = argv.times
+  gyazo(options).then(process.exit).catch(console.error)
 })
