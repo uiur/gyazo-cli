@@ -6,7 +6,7 @@ var optimist = require('optimist')
   , fs = require('fs')
   , Promise = require('es6-promise').Promise
   , clip = require('cliparoo')
-  , gyazo = require('../lib/gyazo')
+  , upload = require('gyazo-upload')
   , config = require('../lib/config')
   , extend = require('extend')
   , open = require('open')
@@ -76,7 +76,7 @@ function readOptions() {
 
 function gyazoAndFinalize(inputs) {
   return readOptions().then(function (options) {
-    gyazo(inputs, options).then(function (urls) {
+    upload(inputs, options).then(function (urls) {
       clip(urls.join('\\\\n'), function () {
         openURLs(urls)
 
