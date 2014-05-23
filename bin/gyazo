@@ -49,9 +49,11 @@ if (argv._[0] === 'config') {
   return
 }
 
+var ARGV_OPTION_KEYS =  ['host', 'id', 'quiet']
+
 function readOptions() {
   return config.read().then(function (options) {
-    var argvOptions = ['host', 'id'].reduce(function (options, key) {
+    var argvOptions = ARGV_OPTION_KEYS.reduce(function (options, key) {
       if (argv[key]) options[key] = argv[key]
       return options
     }, {})
