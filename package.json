@@ -22,7 +22,7 @@
     "cliparoo": "^1.0.0",
     "es6-promise": "^1.0.0",
     "extend": "^1.2.1",
-    "gyazo-upload": "0.0.1",
+    "gyazo-upload": "^0.0.2",
     "open": "0.0.5",
     "optimist": "^0.6.1",
     "osenv": "0.0.3",
