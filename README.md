@@ -43,17 +43,5 @@ npm install -g gyazo-cli
 
 In Linux, you need to install imagemagick.
 
-### TODO
-* Set UserAgent
-
-``` bash
-# gif
-gyazo video.mp4
-
-# idea
-gyazo --direct
-gyazo config autosave.dir /path/to/your/dir/
-```
-
 ### LICENSE
 MIT
