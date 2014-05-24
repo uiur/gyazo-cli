@@ -71,7 +71,7 @@ readOptions().then(function (options) {
       var ws = fs.createWriteStream(tmpPath)
       process.stdin.pipe(ws)
       process.stdin.on('end', function () {
-        gyazo(tmpPath, options).then(process.exit)
+        gyazo(tmpPath, options).then(process.exit).catch(console.error)
       })
     })
 
